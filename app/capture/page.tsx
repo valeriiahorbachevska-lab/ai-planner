@@ -112,7 +112,24 @@ export default function CapturePage() {
             boxShadow: listening ? "0 0 20px rgba(226,75,74,0.4)" : "none",
           }}
         >
-          🎙
+          <svg width="40" height="44" viewBox="0 0 40 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            {/* Base */}
+            <ellipse cx="20" cy="41" rx="10" ry="2.5" fill={listening ? "#fff" : "#888"} />
+            {/* Stand pole */}
+            <rect x="19" y="28" width="2" height="13" fill={listening ? "#fff" : "#888"} />
+            {/* Yoke arms */}
+            <path d="M10 22 Q10 28 19 28" stroke={listening ? "#fff" : "#888"} strokeWidth="2" fill="none" strokeLinecap="round"/>
+            <path d="M30 22 Q30 28 21 28" stroke={listening ? "#fff" : "#888"} strokeWidth="2" fill="none" strokeLinecap="round"/>
+            {/* Mic capsule body */}
+            <rect x="10" y="4" width="20" height="20" rx="10" fill={listening ? "#fff" : "#666"} />
+            {/* Grill lines */}
+            {[8, 11, 14, 17, 20].map((y) => (
+              <line key={y} x1="12" y1={y} x2="28" y2={y} stroke={listening ? "var(--accent)" : "#333"} strokeWidth="1.2" strokeLinecap="round"/>
+            ))}
+            {/* Side dots */}
+            <circle cx="11" cy="14" r="1" fill={listening ? "var(--accent)" : "#444"} />
+            <circle cx="29" cy="14" r="1" fill={listening ? "var(--accent)" : "#444"} />
+          </svg>
         </button>
       </div>
 
