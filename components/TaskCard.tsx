@@ -108,24 +108,37 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
       </div>
 
       {showDateInput && (
-        <div style={{ marginTop: "10px" }}>
-          <input
-            ref={dateInputRef}
-            type="date"
-            min={new Date().toISOString().split("T")[0]}
-            onChange={handleDateSelect}
-            autoFocus
-            style={{
-              width: "100%",
-              background: "#222",
-              border: "0.5px solid var(--accent)",
-              borderRadius: "8px",
-              padding: "10px 14px",
-              color: "var(--text-primary)",
-              fontSize: "15px",
-              colorScheme: "dark",
-            }}
-          />
+        <div style={{ marginTop: "10px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
+          {Array.from({ length: 6 }, (_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() + i + 1);
+            const key = d.toISOString().split("T")[0];
+            const label = i === 0
+              ? "Завтра"
+              : d.toLocaleDateString("uk-UA", { weekday: "short", day: "numeric", month: "short" });
+            return (
+              <button
+                key={key}
+                onClick={() => {
+                  updateTask(task.id, { deadline: key });
+                  setShowDateInput(false);
+                  onUpdate();
+                }}
+                style={{
+                  padding: "7px 12px",
+                  background: "#222",
+                  border: "0.5px solid #444",
+                  borderRadius: "8px",
+                  color: "var(--text-primary)",
+                  fontSize: "12px",
+                  cursor: "pointer",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
       )}
     </div>
