@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { Task } from "@/lib/types";
 import { updateTask, deleteTask } from "@/lib/storage";
 
@@ -18,6 +19,20 @@ function formatDeadline(deadline: string): string {
 }
 
 export default function TaskCard({ task, onUpdate }: TaskCardProps) {
+  const dateInputRef = useRef<HTMLInputElement>(null);
+
+  function handleDateSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const date = e.target.value;
+    if (!date) return;
+    const today = new Date().toISOString().split("T")[0];
+    if (date === today) {
+      updateTask(task.id, { status: "today", deadline: "today" });
+    } else {
+      updateTask(task.id, { deadline: date });
+    }
+    onUpdate();
+  }
+
   return (
     <div style={{
       background: "var(--bg-card)",
@@ -57,7 +72,7 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
 
       <div style={{ display: "flex", gap: "8px" }}>
         <button
-          onClick={() => { updateTask(task.id, { status: "today" }); onUpdate(); }}
+          onClick={() => { updateTask(task.id, { status: "today", deadline: "today" }); onUpdate(); }}
           style={{
             flex: 1, padding: "9px 4px", background: "transparent",
             border: "0.5px solid var(--accent)", borderRadius: "8px",
@@ -66,16 +81,34 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
         >
           На сьогодні
         </button>
+
         <button
-          onClick={() => onUpdate()}
+          onClick={() => dateInputRef.current?.showPicker()}
           style={{
             flex: 1, padding: "9px 4px", background: "transparent",
-            border: "0.5px solid #333", borderRadius: "8px",
-            color: "var(--text-muted)", fontSize: "12px", cursor: "pointer", minHeight: "40px",
+            border: "0.5px solid #444", borderRadius: "8px",
+            color: "var(--text-primary)", fontSize: "12px", cursor: "pointer", minHeight: "40px",
+            position: "relative",
           }}
         >
-          Лишити
+          📅 На дату
+          <input
+            ref={dateInputRef}
+            type="date"
+            min={new Date().toISOString().split("T")[0]}
+            onChange={handleDateSelect}
+            style={{
+              position: "absolute",
+              opacity: 0,
+              width: "1px",
+              height: "1px",
+              top: 0,
+              left: 0,
+              pointerEvents: "none",
+            }}
+          />
         </button>
+
         <button
           onClick={() => { deleteTask(task.id); onUpdate(); }}
           style={{
