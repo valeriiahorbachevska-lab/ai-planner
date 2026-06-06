@@ -119,7 +119,9 @@ export default function CalendarPicker({ onSelect, onClose }: CalendarPickerProp
           return (
             <button
               key={key}
-              onClick={() => {
+              type="button"
+              onPointerDown={(e) => {
+                e.preventDefault();
                 if (!disabled) {
                   onSelect(key);
                   onClose();
