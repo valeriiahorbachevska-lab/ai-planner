@@ -1,7 +1,15 @@
 "use client";
 
-import { Task } from "@/lib/types";
+import { Task, Category } from "@/lib/types";
 import { updateTask } from "@/lib/storage";
+
+const CATEGORY_COLORS: Record<Category, string> = {
+  "Work": "#4a90d9",
+  "Personal": "#e07878",
+  "Learning": "#9b7fe8",
+  "Films/Books": "#c77dd9",
+  "Other": "#5abfb0",
+};
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -88,8 +96,10 @@ export default function TodayTask({ task, onUpdate }: TodayTaskProps) {
         }}>
           {task.title}
         </div>
-        <div style={{ color: "var(--text-muted)", fontSize: "12px" }}>
-          ⏱ {task.duration} хв &nbsp;·&nbsp;
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+          <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>
+            ⏱ {task.duration} хв
+          </span>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -97,17 +107,21 @@ export default function TodayTask({ task, onUpdate }: TodayTaskProps) {
               onUpdate();
             }}
             style={{
-              background: "none",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
+              background: "none", border: "none", padding: 0, cursor: "pointer",
               color: task.priority === "must" ? "var(--badge-must-text)" : "var(--badge-nice-text)",
-              fontSize: "12px",
-              fontFamily: "inherit",
+              fontSize: "12px", fontFamily: "inherit",
             }}
           >
             {task.priority}
           </button>
+          {task.category && (
+            <span style={{
+              color: CATEGORY_COLORS[task.category] ?? "#888",
+              fontSize: "12px", fontWeight: 500,
+            }}>
+              # {task.category}
+            </span>
+          )}
         </div>
       </div>
     </div>

@@ -1,9 +1,17 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Task } from "@/lib/types";
+import { Task, Category } from "@/lib/types";
 import { updateTask, deleteTask } from "@/lib/storage";
 import CalendarPicker from "@/components/CalendarPicker";
+
+const CATEGORY_COLORS: Record<Category, string> = {
+  "Work": "#4a90d9",
+  "Personal": "#e07878",
+  "Learning": "#9b7fe8",
+  "Films/Books": "#c77dd9",
+  "Other": "#5abfb0",
+};
 
 interface TaskCardProps {
   task: Task;
@@ -69,8 +77,19 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
         </button>
       </div>
 
-      <div style={{ color: "var(--text-muted)", fontSize: "12px", marginBottom: "12px" }}>
-        ⏱ {task.duration} хв &nbsp;·&nbsp; 📅 {formatDeadline(task.deadline)}
+      <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "12px" }}>
+        <span style={{ color: "var(--text-muted)", fontSize: "12px" }}>
+          ⏱ {task.duration} хв &nbsp;·&nbsp; 📅 {formatDeadline(task.deadline)}
+        </span>
+        {task.category && (
+          <span style={{
+            color: CATEGORY_COLORS[task.category] ?? "#888",
+            fontSize: "12px",
+            fontWeight: 500,
+          }}>
+            # {task.category}
+          </span>
+        )}
       </div>
 
       <div style={{ display: "flex", gap: "8px" }}>

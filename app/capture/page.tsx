@@ -39,6 +39,7 @@ export default function CapturePage() {
           ...t,
           id: crypto.randomUUID(),
           status: "inbox" as const,
+          category: t.category ?? "Other",
           createdAt: new Date().toISOString(),
         })
       );

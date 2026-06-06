@@ -7,7 +7,8 @@ Return ONLY a valid JSON array, no markdown fences, no explanation:
     "title": "short action-oriented string, max 60 chars",
     "priority": "must or nice",
     "duration": number in minutes,
-    "deadline": "today or flexible or YYYY-MM-DD"
+    "deadline": "today or flexible or YYYY-MM-DD",
+    "category": "Work or Personal or Learning or Films/Books or Other"
   }
 ]
 
@@ -18,4 +19,5 @@ Rules:
 - "nice" = optional, can be delayed
 - Merge obvious duplicates into one task
 - Split clearly compound tasks (e.g. "buy milk and write report" → 2 tasks)
-- Minimum 1 task, maximum 20 tasks`;
+- Minimum 1 task, maximum 20 tasks
+- Category rules: Work = job/career tasks, Personal = life/health/errands, Learning = books/courses/skills, Films/Books = entertainment, Other = anything else`;
