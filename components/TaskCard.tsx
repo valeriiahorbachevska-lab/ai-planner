@@ -29,17 +29,26 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
         <span style={{ color: "var(--text-primary)", fontSize: "15px", flex: 1, marginRight: "10px", lineHeight: 1.4 }}>
           {task.title}
         </span>
-        <span style={{
-          background: task.priority === "must" ? "var(--badge-must-bg)" : "var(--badge-nice-bg)",
-          color: task.priority === "must" ? "var(--badge-must-text)" : "var(--badge-nice-text)",
-          fontSize: "11px",
-          padding: "3px 8px",
-          borderRadius: "6px",
-          flexShrink: 0,
-          fontWeight: 500,
-        }}>
+        <button
+          onClick={() => {
+            updateTask(task.id, { priority: task.priority === "must" ? "nice" : "must" });
+            onUpdate();
+          }}
+          title="Натисни щоб змінити пріоритет"
+          style={{
+            background: task.priority === "must" ? "var(--badge-must-bg)" : "var(--badge-nice-bg)",
+            color: task.priority === "must" ? "var(--badge-must-text)" : "var(--badge-nice-text)",
+            fontSize: "11px",
+            padding: "3px 8px",
+            borderRadius: "6px",
+            flexShrink: 0,
+            fontWeight: 500,
+            border: "none",
+            cursor: "pointer",
+          }}
+        >
           {task.priority}
-        </span>
+        </button>
       </div>
 
       <div style={{ color: "var(--text-muted)", fontSize: "12px", marginBottom: "12px" }}>

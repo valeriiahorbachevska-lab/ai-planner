@@ -90,11 +90,24 @@ export default function TodayTask({ task, onUpdate }: TodayTaskProps) {
         </div>
         <div style={{ color: "var(--text-muted)", fontSize: "12px" }}>
           ⏱ {task.duration} хв &nbsp;·&nbsp;
-          <span style={{
-            color: task.priority === "must" ? "var(--badge-must-text)" : "var(--badge-nice-text)",
-          }}>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              updateTask(task.id, { priority: task.priority === "must" ? "nice" : "must" });
+              onUpdate();
+            }}
+            style={{
+              background: "none",
+              border: "none",
+              padding: 0,
+              cursor: "pointer",
+              color: task.priority === "must" ? "var(--badge-must-text)" : "var(--badge-nice-text)",
+              fontSize: "12px",
+              fontFamily: "inherit",
+            }}
+          >
             {task.priority}
-          </span>
+          </button>
         </div>
       </div>
     </div>
