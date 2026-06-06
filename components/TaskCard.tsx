@@ -109,13 +109,44 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
       </div>
 
       {showDateInput && (
-        <CalendarPicker
-          onSelect={(date) => {
-            updateTask(task.id, { deadline: date });
-            onUpdate();
-          }}
-          onClose={() => setShowDateInput(false)}
-        />
+        <div style={{ marginTop: "10px" }}>
+          <p style={{ color: "var(--text-muted)", fontSize: "12px", margin: "0 0 6px" }}>
+            Обери дату:
+          </p>
+          <input
+            type="date"
+            min={new Date().toISOString().split("T")[0]}
+            max={new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString().split("T")[0]}
+            onChange={(e) => {
+              if (!e.target.value) return;
+              updateTask(task.id, { deadline: e.target.value });
+              setShowDateInput(false);
+              onUpdate();
+            }}
+            style={{
+              width: "100%",
+              background: "#222",
+              border: "0.5px solid var(--accent)",
+              borderRadius: "8px",
+              padding: "12px 14px",
+              color: "#f0f0f0",
+              fontSize: "16px",
+              colorScheme: "dark",
+              display: "block",
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => setShowDateInput(false)}
+            style={{
+              marginTop: "8px", width: "100%", padding: "8px",
+              background: "transparent", border: "0.5px solid #333",
+              borderRadius: "8px", color: "#666", fontSize: "13px", cursor: "pointer",
+            }}
+          >
+            Скасувати
+          </button>
+        </div>
       )}
     </div>
   );
