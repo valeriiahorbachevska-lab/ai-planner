@@ -7,6 +7,7 @@ const TABS = [
   { href: "/capture", label: "Capture" },
   { href: "/inbox", label: "Inbox" },
   { href: "/today", label: "Today" },
+  { href: "/week", label: "Week" },
 ];
 
 export default function BottomNav() {
@@ -36,12 +37,12 @@ export default function BottomNav() {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
-              padding: "4px 24px",
+              padding: "4px 12px",
               color: active ? "var(--accent)" : "var(--text-muted)",
-              fontSize: "13px",
+              fontSize: "12px",
               fontWeight: active ? 500 : 400,
               borderBottom: active ? "1.5px solid var(--accent)" : "1.5px solid transparent",
-              minWidth: "80px",
+              minWidth: "60px",
               minHeight: "44px",
             }}
           >
