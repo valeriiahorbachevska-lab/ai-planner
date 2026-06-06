@@ -82,32 +82,29 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
           На сьогодні
         </button>
 
-        <button
-          onClick={() => dateInputRef.current?.showPicker()}
-          style={{
-            flex: 1, padding: "9px 4px", background: "transparent",
+        <div style={{ flex: 1, position: "relative", minHeight: "40px" }}>
+          <div style={{
+            position: "absolute", inset: 0,
+            display: "flex", alignItems: "center", justifyContent: "center",
             border: "0.5px solid #444", borderRadius: "8px",
-            color: "var(--text-primary)", fontSize: "12px", cursor: "pointer", minHeight: "40px",
-            position: "relative",
-          }}
-        >
-          📅 На дату
+            color: "var(--text-primary)", fontSize: "12px",
+            pointerEvents: "none",
+          }}>
+            📅 На дату
+          </div>
           <input
-            ref={dateInputRef}
             type="date"
             min={new Date().toISOString().split("T")[0]}
             onChange={handleDateSelect}
             style={{
-              position: "absolute",
+              position: "absolute", inset: 0,
               opacity: 0,
-              width: "1px",
-              height: "1px",
-              top: 0,
-              left: 0,
-              pointerEvents: "none",
+              width: "100%", height: "100%",
+              cursor: "pointer",
+              border: "none",
             }}
           />
-        </button>
+        </div>
 
         <button
           onClick={() => { deleteTask(task.id); onUpdate(); }}
