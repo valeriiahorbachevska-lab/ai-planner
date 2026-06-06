@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { Task } from "@/lib/types";
 import { updateTask, deleteTask } from "@/lib/storage";
+import CalendarPicker from "@/components/CalendarPicker";
 
 interface TaskCardProps {
   task: Task;
@@ -108,38 +109,13 @@ export default function TaskCard({ task, onUpdate }: TaskCardProps) {
       </div>
 
       {showDateInput && (
-        <div style={{ marginTop: "10px", display: "flex", gap: "6px", flexWrap: "wrap" }}>
-          {Array.from({ length: 6 }, (_, i) => {
-            const d = new Date();
-            d.setDate(d.getDate() + i + 1);
-            const key = d.toISOString().split("T")[0];
-            const label = i === 0
-              ? "Завтра"
-              : d.toLocaleDateString("uk-UA", { weekday: "short", day: "numeric", month: "short" });
-            return (
-              <button
-                key={key}
-                onClick={() => {
-                  updateTask(task.id, { deadline: key });
-                  setShowDateInput(false);
-                  onUpdate();
-                }}
-                style={{
-                  padding: "7px 12px",
-                  background: "#222",
-                  border: "0.5px solid #444",
-                  borderRadius: "8px",
-                  color: "var(--text-primary)",
-                  fontSize: "12px",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
+        <CalendarPicker
+          onSelect={(date) => {
+            updateTask(task.id, { deadline: date });
+            onUpdate();
+          }}
+          onClose={() => setShowDateInput(false)}
+        />
       )}
     </div>
   );
