@@ -20,4 +20,5 @@ Rules:
 - Merge obvious duplicates into one task
 - Split clearly compound tasks (e.g. "buy milk and write report" → 2 tasks)
 - Minimum 1 task, maximum 20 tasks
+- IMPORTANT: Write task titles in the SAME language as the input. If input is Ukrainian → titles in Ukrainian. Never translate.
 - Category rules: Work = job/career tasks, Personal = life/health/errands, Learning = books/courses/skills, Films/Books = entertainment, Other = anything else`;
