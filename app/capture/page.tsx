@@ -62,13 +62,16 @@ export default function CapturePage() {
   }
 
   return (
-    <main style={{ padding: "24px 16px" }}>
-      <h1 style={{ color: "var(--text-primary)", fontSize: "22px", fontWeight: 500, margin: "0 0 6px" }}>
-        Що у тебе в голові?
+    <main style={{
+      padding: "24px 16px",
+      minHeight: "calc(100vh - 70px)",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+    }}>
+      <h1 style={{ color: "var(--text-primary)", fontSize: "32px", fontWeight: 700, margin: "0 0 20px", letterSpacing: "-0.5px" }}>
+        TO-DO
       </h1>
-      <p style={{ color: "var(--text-muted)", fontSize: "14px", margin: "0 0 20px" }}>
-        Пиши або говори — розберемо
-      </p>
 
       <textarea
         value={text}
