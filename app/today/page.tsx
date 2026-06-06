@@ -22,8 +22,10 @@ import {
 
 export default function TodayPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [celebrationClosed, setCelebrationClosed] = useState(false);
 
   function refresh() {
+    setCelebrationClosed(false);
     const all = getTasks().filter((t) => t.status === "today" || t.status === "done");
     all.sort((a, b) => {
       if (a.status !== b.status) return a.status === "done" ? 1 : -1;
@@ -64,7 +66,7 @@ export default function TodayPage() {
   }
 
   const doneCount = tasks.filter((t) => t.status === "done").length;
-  const allDone = tasks.length > 0 && doneCount === tasks.length;
+  const allDone = tasks.length > 0 && doneCount === tasks.length && !celebrationClosed;
   const activeTasks = tasks.filter((t) => t.status !== "done");
 
   return (
@@ -123,37 +125,39 @@ export default function TodayPage() {
         </>
       )}
       {allDone && (
-        <div style={{
-          position: "fixed", inset: 0,
-          background: "rgba(0,0,0,0.85)",
-          zIndex: 999,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "24px",
-        }}
-          onClick={() => setTasks(t => [...t])}
+        <div
+          onClick={() => setCelebrationClosed(true)}
+          style={{
+            position: "fixed", inset: 0,
+            background: "rgba(0,0,0,0.85)",
+            zIndex: 999,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "24px",
+          }}
         >
-          <div style={{
-            background: "#1a1a1a",
-            border: "0.5px solid #e24b4a",
-            borderRadius: "20px",
-            padding: "40px 32px",
-            textAlign: "center",
-            maxWidth: "320px",
-          }}>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "#1a1a1a",
+              border: "0.5px solid #e24b4a",
+              borderRadius: "20px",
+              padding: "40px 32px",
+              textAlign: "center",
+              maxWidth: "320px",
+              width: "100%",
+            }}
+          >
             <div style={{ fontSize: "64px", marginBottom: "16px" }}>🎉</div>
-            <h2 style={{
-              color: "#f0f0f0", fontSize: "22px",
-              fontWeight: 700, margin: "0 0 12px",
-            }}>
+            <h2 style={{ color: "#f0f0f0", fontSize: "22px", fontWeight: 700, margin: "0 0 12px" }}>
               Ура, оце ти постаралась!
             </h2>
             <p style={{ color: "#555", fontSize: "15px", margin: "0 0 28px" }}>
               Всі задачі на сьогодні виконані 🔥
             </p>
             <button
-              onClick={(e) => { e.stopPropagation(); setTasks(t => [...t]); }}
+              onClick={() => setCelebrationClosed(true)}
               style={{
                 width: "100%", height: "48px",
                 background: "#e24b4a", border: "none",
