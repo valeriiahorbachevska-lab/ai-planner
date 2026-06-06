@@ -1,10 +1,24 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getTasks } from "@/lib/storage";
+import { getTasks, saveTasks } from "@/lib/storage";
 import { Task } from "@/lib/types";
 import TodayTask from "@/components/TodayTask";
 import Link from "next/link";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
 
 export default function TodayPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -12,8 +26,8 @@ export default function TodayPage() {
   function refresh() {
     const all = getTasks().filter((t) => t.status === "today" || t.status === "done");
     all.sort((a, b) => {
-      if (a.priority !== b.priority) return a.priority === "must" ? -1 : 1;
       if (a.status !== b.status) return a.status === "done" ? 1 : -1;
+      if (a.priority !== b.priority) return a.priority === "must" ? -1 : 1;
       return 0;
     });
     setTasks(all);
@@ -21,7 +35,36 @@ export default function TodayPage() {
 
   useEffect(() => { refresh(); }, []);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 8 } })
+  );
+
+  function handleDragEnd(event: DragEndEvent) {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const activeTasks = tasks.filter((t) => t.status !== "done");
+    const doneTasks = tasks.filter((t) => t.status === "done");
+
+    const oldIndex = activeTasks.findIndex((t) => t.id === active.id);
+    const newIndex = activeTasks.findIndex((t) => t.id === over.id);
+
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const reordered = arrayMove(activeTasks, oldIndex, newIndex);
+    const newTasks = [...reordered, ...doneTasks];
+    setTasks(newTasks);
+
+    const allTasks = getTasks();
+    const otherTasks = allTasks.filter(
+      (t) => t.status !== "today" && t.status !== "done"
+    );
+    saveTasks([...otherTasks, ...newTasks]);
+  }
+
   const doneCount = tasks.filter((t) => t.status === "done").length;
+  const activeTasks = tasks.filter((t) => t.status !== "done");
 
   return (
     <main style={{ padding: "24px 16px" }}>
@@ -55,9 +98,14 @@ export default function TodayPage() {
         </div>
       ) : (
         <>
-          {tasks.map((task) => (
-            <TodayTask key={task.id} task={task} onUpdate={refresh} />
-          ))}
+          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={activeTasks.map((t) => t.id)} strategy={verticalListSortingStrategy}>
+              {tasks.map((task) => (
+                <TodayTask key={task.id} task={task} onUpdate={refresh} />
+              ))}
+            </SortableContext>
+          </DndContext>
+
           <Link href="/capture" style={{
             display: "block",
             background: "var(--bg-card)",

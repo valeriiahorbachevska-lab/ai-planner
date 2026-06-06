@@ -2,6 +2,8 @@
 
 import { Task } from "@/lib/types";
 import { updateTask } from "@/lib/storage";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TodayTaskProps {
   task: Task;
@@ -11,6 +13,9 @@ interface TodayTaskProps {
 export default function TodayTask({ task, onUpdate }: TodayTaskProps) {
   const done = task.status === "done";
 
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
+    useSortable({ id: task.id, disabled: done });
+
   function toggle() {
     updateTask(task.id, { status: done ? "today" : "done" });
     onUpdate();
@@ -18,40 +23,62 @@ export default function TodayTask({ task, onUpdate }: TodayTaskProps) {
 
   return (
     <div
-      onClick={toggle}
-      role="checkbox"
-      aria-checked={done}
-      tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && toggle()}
+      ref={setNodeRef}
       style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.4 : done ? 0.5 : 1,
+        zIndex: isDragging ? 10 : "auto",
         background: "var(--bg-card)",
         borderRadius: "12px",
         padding: "14px 16px",
         marginBottom: "10px",
         display: "flex",
         alignItems: "center",
-        gap: "14px",
-        cursor: "pointer",
+        gap: "12px",
         borderLeft: task.priority === "must" ? "2px solid var(--accent)" : "2px solid transparent",
-        opacity: done ? 0.5 : 1,
-        transition: "opacity 0.15s",
       }}
     >
-      <div style={{
-        width: "22px",
-        height: "22px",
-        borderRadius: "50%",
-        border: done ? "none" : `1.5px solid ${task.priority === "must" ? "var(--accent)" : "#444"}`,
-        background: done ? "var(--accent)" : "transparent",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexShrink: 0,
-      }}>
-        {done && <span style={{ color: "#fff", fontSize: "12px", lineHeight: 1 }}>✓</span>}
-      </div>
+      {!done && (
+        <div
+          {...attributes}
+          {...listeners}
+          style={{
+            cursor: isDragging ? "grabbing" : "grab",
+            color: "#444",
+            fontSize: "16px",
+            flexShrink: 0,
+            touchAction: "none",
+            padding: "2px 4px",
+            lineHeight: 1,
+          }}
+          aria-label="Перетягнути"
+        >
+          ⠿
+        </div>
+      )}
 
-      <div style={{ flex: 1 }}>
+      <button
+        onClick={toggle}
+        style={{
+          width: "22px",
+          height: "22px",
+          borderRadius: "50%",
+          border: done ? "none" : `1.5px solid ${task.priority === "must" ? "var(--accent)" : "#444"}`,
+          background: done ? "var(--accent)" : "transparent",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+          cursor: "pointer",
+          padding: 0,
+        }}
+        aria-label={done ? "Відмінити виконання" : "Відмітити виконаним"}
+      >
+        {done && <span style={{ color: "#fff", fontSize: "12px", lineHeight: 1 }}>✓</span>}
+      </button>
+
+      <div style={{ flex: 1, cursor: "pointer" }} onClick={toggle}>
         <div style={{
           color: done ? "var(--text-muted)" : "var(--text-primary)",
           fontSize: "15px",
