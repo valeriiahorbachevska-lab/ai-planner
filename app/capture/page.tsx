@@ -68,7 +68,7 @@ export default function CapturePage() {
         margin: "0 0 16px",
         letterSpacing: "-0.5px",
       }}>
-        TO-DO
+        Шо на цей раз?
       </h1>
 
       <textarea
